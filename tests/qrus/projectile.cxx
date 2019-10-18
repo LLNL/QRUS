@@ -1,9 +1,26 @@
 
-#include "qrus.hxx"
+// Test 2: Projectile trajectory, Qrus version
 
 #if !defined(OUTPUT_DATA)
 #  define OUTPUT_DATA 1
 #endif
+
+#if OUTPUT_DATA
+#  include <iostream>
+#endif
+
+#if !defined(K1)
+#  define K1 0.
+#endif
+
+#if !defined(K2)
+#  define K2 0.
+#endif
+
+// QRUS header section
+
+#include "Qrus/qrus.hxx"
+#include "Qrus/litterals.hxx"
 
 #if !defined(OUTPUT_INFO)
 #  define OUTPUT_INFO QRUS_HAS_IO
@@ -28,8 +45,8 @@ int main() {
   auto v_x = s * Qrus::cos(a);
   auto v_y = s * Qrus::sin(a);
 
-  Qrus::Quantity< double, Qrus::Unit< std::ratio< 0> , std::ratio< 0> , std::ratio<-1> , std::ratio< 0> >, std::ratio< 1> > k_1(.3);
-  Qrus::Quantity< double, Qrus::Unit< std::ratio< 0> , std::ratio<-1> , std::ratio< 0> , std::ratio< 0> >, std::ratio< 1> > k_2(.1);
+  Qrus::Quantity< double, Qrus::Unit< std::ratio< 0> , std::ratio< 0> , std::ratio<-1> , std::ratio< 0> >, std::ratio< 1> > k_1(K1);
+  Qrus::Quantity< double, Qrus::Unit< std::ratio< 0> , std::ratio<-1> , std::ratio< 0> , std::ratio< 0> >, std::ratio< 1> > k_2(K2);
 
 
 #if OUTPUT_INFO

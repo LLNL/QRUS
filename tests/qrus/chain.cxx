@@ -1,5 +1,10 @@
 
-#include "qrus.hxx"
+// Test 1: Simple chain of operations, Qrus version
+
+// QRUS header section
+
+#include "Qrus/qrus.hxx"
+#include "Qrus/litterals.hxx"
 
 #if !defined(OUTPUT_INFO)
 #  define OUTPUT_INFO QRUS_HAS_IO
