@@ -17,7 +17,6 @@
 #include <Qrus/unit.hxx>
 #include <Qrus/quantity.hxx>
 #include <Qrus/operators.hxx>
-#include <Qrus/functions.hxx>
 
 #if QRUS_HAS_IO
 #  include <Qrus/io.txx>

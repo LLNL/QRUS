@@ -28,7 +28,7 @@ namespace Qrus {
 
   template <typename Q_, typename P, typename Q=typename promote::pow<Q_, P>::Q >
   constexpr inline Q pow(Q_ const & op, P const & p) {
-    return std::pow(op.repr,((typename Q::R)P::num)/((typename Q::R)P::den));
+    return std::pow(op.repr,((long double)P::num)/((long double)P::den));
   }
 
   // Trigonometry functions

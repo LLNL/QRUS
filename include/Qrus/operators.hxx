@@ -32,7 +32,13 @@ namespace Qrus {
 
   template < typename Q_lhs, typename Q_rhs, typename Q=typename promote::add< Q_lhs, Q_rhs >::Q >
   constexpr inline Q operator + (Q_lhs const & lhs, Q_rhs const & rhs) {
-    return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) + (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+//  return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) + (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+
+    const long double nl = Q::S::den * Q_lhs::S::num * Q_rhs::S::den;
+    const long double nr = Q::S::den * Q_lhs::S::den * Q_rhs::S::num;
+    const long double  d = Q::S::num * Q_lhs::S::den * Q_rhs::S::den;
+
+    return Q( ( (typename Q::R)(nl / d) * lhs.repr ) + ( (typename Q::R)(nr / d) * rhs.repr ) );
   }
 
   namespace promote {
@@ -47,7 +53,13 @@ namespace Qrus {
 
   template < typename Q_lhs, typename Q_rhs, typename Q=typename promote::subtract< Q_lhs, Q_rhs >::Q >
   constexpr inline Q operator - (Q_lhs const & lhs, Q_rhs const & rhs) {
-    return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) - (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+//  return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) - (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+
+    const long double nl = Q::S::den * Q_lhs::S::num * Q_rhs::S::den;
+    const long double nr = Q::S::den * Q_lhs::S::den * Q_rhs::S::num;
+    const long double  d = Q::S::num * Q_lhs::S::den * Q_rhs::S::den;
+
+    return Q( ( (typename Q::R)(nl / d) * lhs.repr ) - ( (typename Q::R)(nr / d) * rhs.repr ) );
   }
 
   namespace promote {
@@ -68,7 +80,11 @@ namespace Qrus {
 
   template < typename Q_lhs, typename Q_rhs, typename Q=typename promote::multiply< Q_lhs, Q_rhs >::Q >
   constexpr inline Q operator * (Q_lhs const & lhs, Q_rhs const & rhs) {
-    return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) * (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+//  return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) * (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+
+    const long double n = Q::S::den * Q_lhs::S::num * Q_rhs::S::num;
+    const long double d = Q::S::num * Q_lhs::S::den * Q_rhs::S::den;
+    return Q( (typename Q::R)(n/d) * ( rhs.repr * lhs.repr ) );
   }
 
   namespace promote {
@@ -89,7 +105,11 @@ namespace Qrus {
 
   template < typename Q_lhs, typename Q_rhs, typename Q=typename promote::divide< Q_lhs, Q_rhs >::Q >
   constexpr inline Q operator / (Q_lhs const & lhs, Q_rhs const & rhs) {
-    return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) / (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+//  return Q(Q::S::den * ( (typename Q::R)( Q_lhs::S::num * lhs.repr / Q_lhs::S::den ) / (typename Q::R)( Q_rhs::S::num * rhs.repr / Q_rhs::S::den ) ) / Q::S::num);
+
+    const long double n = Q::S::den * Q_lhs::S::num * Q_rhs::S::den;
+    const long double d = Q::S::num * Q_lhs::S::den * Q_rhs::S::num;
+    return Q( (typename Q::R)(n/d) * (lhs.repr / rhs.repr) );
   }
 
 } // namespace Qrus

@@ -1,0 +1,36 @@
+
+set terminal svg size 840,840
+set output 'projectiles.svg'
+
+set multiplot layout 2,2
+
+set xrange [0:10]
+set yrange [-1:2]
+
+set title 'Normal version with double (no math functions)'
+plot 'raw/projectile_nm-0-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'raw/projectile_nm-1-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'raw/projectile_nm-0-1.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'raw/projectile_nm-1-1.out' using 2:3 with lines title 'K1=0 K2=0'
+
+
+set title 'Qrus version (no math functions)'
+plot 'qrus/projectile_nm-0-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'qrus/projectile_nm-1-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'qrus/projectile_nm-0-1.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'qrus/projectile_nm-1-1.out' using 2:3 with lines title 'K1=0 K2=0'
+
+set title 'Normal version with double'
+plot 'raw/projectile-0-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'raw/projectile-1-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'raw/projectile-0-1.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'raw/projectile-1-1.out' using 2:3 with lines title 'K1=0 K2=0'
+
+
+set title 'Qrus version'
+plot 'qrus/projectile-0-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'qrus/projectile-1-0.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'qrus/projectile-0-1.out' using 2:3 with lines title 'K1=0 K2=0',\
+     'qrus/projectile-1-1.out' using 2:3 with lines title 'K1=0 K2=0'
+
+unset multiplot

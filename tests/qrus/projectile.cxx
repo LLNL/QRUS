@@ -17,10 +17,18 @@
 #  define K2 0.
 #endif
 
+#if !defined(N)
+#  define N 10000
+#endif
+
+#if !defined(USE_MATH_FUNCTIONS)
+#  define USE_MATH_FUNCTIONS 1
+#endif
+
 // QRUS header section
 
-#include "Qrus/qrus.hxx"
-#include "Qrus/litterals.hxx"
+#include <Qrus/qrus.hxx>
+#include <Qrus/litterals.hxx>
 
 #if !defined(OUTPUT_INFO)
 #  define OUTPUT_INFO QRUS_HAS_IO
@@ -28,6 +36,10 @@
 
 #if OUTPUT_INFO && !QRUS_HAS_IO
 #  error "Cannot display type-info without enabling I/O in Qrus (-DQRUS_HAS_IO=1)."
+#endif
+
+#if USE_MATH_FUNCTIONS
+#  include <Qrus/functions.hxx>
 #endif
 
 int main() {
@@ -42,12 +54,16 @@ int main() {
   auto  dt = 10._us;
   auto   x = 0.000_m;
   auto   y = 0.000_m;
+#if USE_MATH_FUNCTIONS
   auto v_x = s * Qrus::cos(a);
   auto v_y = s * Qrus::sin(a);
+#else
+  auto v_x = s * .86__;
+  auto v_y = s * .50__;
+#endif
 
   Qrus::Quantity< double, Qrus::Unit< std::ratio< 0> , std::ratio< 0> , std::ratio<-1> , std::ratio< 0> >, std::ratio< 1> > k_1(K1);
   Qrus::Quantity< double, Qrus::Unit< std::ratio< 0> , std::ratio<-1> , std::ratio< 0> , std::ratio< 0> >, std::ratio< 1> > k_2(K2);
-
 
 #if OUTPUT_INFO
   std::cout << "initialize:" << std::endl;
@@ -65,7 +81,6 @@ int main() {
   std::cout << "  v_y = " << std::scientific << std::showpos << v_y.repr << " " << decltype(v_y)::__scale() << " " << decltype(v_y)::__unit() << std::endl;
 #endif
 
-  int N = 150000;
   for ( int t = 0; t < N; ++t ) {
 
 #if OUTPUT_INFO
@@ -76,8 +91,13 @@ int main() {
     std::cout << "  v_y[" << t << "] = " << std::scientific << std::showpos << v_y.repr << " " << decltype(v_y)::__scale() << " " << decltype(v_y)::__unit() << std::endl;
 #endif
 
+#if USE_MATH_FUNCTIONS
     auto a_x = g_x - k_1 * v_x + k_2 * (v_x.repr > 0. ? -1.__ : 1.__) * Qrus::pow(v_x,std::ratio<2>());
     auto a_y = g_y - k_1 * v_y + k_2 * (v_y.repr > 0. ? -1.__ : 1.__) * Qrus::pow(v_y,std::ratio<2>());
+#else
+    auto a_x = g_x - k_1 * v_x + k_2 * (v_x.repr > 0. ? -1.__ : 1.__) * v_x * v_x;
+    auto a_y = g_y - k_1 * v_y + k_2 * (v_y.repr > 0. ? -1.__ : 1.__) * v_y * v_y;
+#endif
 
 #if OUTPUT_INFO
     std::cout << "  a_x[" << t << "] = " << std::scientific << std::showpos << a_x.repr << " " << decltype(a_x)::__scale() << " " << decltype(a_x)::__unit() << std::endl;
