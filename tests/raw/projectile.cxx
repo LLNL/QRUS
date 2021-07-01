@@ -42,7 +42,7 @@ using real_t = double;
 int main() {
 
   real_t   s = 10.000;
-  real_t   a = 3.1415926535897932384626433832795 * 30.00 / 180.0;
+  real_t   a = 3.1415926535897932384626433832795 * 30.00 / 180.0; // 30deg in rad
   real_t   m = 80000;
   real_t g_x =  0.;
   real_t g_y = -9.807;
