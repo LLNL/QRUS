@@ -43,7 +43,7 @@ struct System {
     compute_forces();
   }
 
-  void compute_force_single(
+  void compute_force_one_spring(
     Index i, Index j,
     Index i_, Index j_,
     Real k, Real d
@@ -67,11 +67,15 @@ struct System {
     for (Index i = 0; i < ProblemT::nx; ++i)
       for (Index j = 0; j < ProblemT::ny; ++j) {
         Index idx = i * ProblemT::ny + j;
-        fx[idx] = 0.; fy[idx] = 0.;
-        compute_force_single(i, j,  1,  0, ProblemT::kx, ProblemT::lx);
-        compute_force_single(i, j, -1,  0, ProblemT::kx, ProblemT::lx);
-        compute_force_single(i, j,  0,  1, ProblemT::ky, ProblemT::ly);
-        compute_force_single(i, j,  0, -1, ProblemT::ky, ProblemT::ly);
+        Index p_idx = (i+1) * (ProblemT::ny + 2) + (j+1);
+
+        fx[idx] = ProblemT::force_x(time, px[p_idx], py[p_idx]);
+        fy[idx] = ProblemT::force_y(time, px[p_idx], py[p_idx]);
+
+        compute_force_one_spring(i, j, -1,  0, i == 0              ? ProblemT::kx_0 : ProblemT::kx, ProblemT::lx);
+        compute_force_one_spring(i, j,  1,  0, i == ProblemT::nx-1 ? ProblemT::kx_1 : ProblemT::kx, ProblemT::lx);
+        compute_force_one_spring(i, j,  0, -1, j == 0              ? ProblemT::ky_0 : ProblemT::ky, ProblemT::ly);
+        compute_force_one_spring(i, j,  0,  1, j == ProblemT::ny-1 ? ProblemT::ky_1 : ProblemT::ky, ProblemT::ly);
       }
   }
 
@@ -110,22 +114,30 @@ struct System {
 };
 
 struct problem_0 {
-  static constexpr Index nx { 3 };
-  static constexpr Index ny { 3 };
+  static constexpr Index nx { 5 };
+  static constexpr Index ny { 5 };
 
-  static constexpr Real mass{ 1. };
+  static constexpr Real mass { 1. };
 
   static constexpr Real lx { 1. };
   static constexpr Real ly { 1. };
 
-  static constexpr Real kx { 1. };
-  static constexpr Real ky { 1. };
+  static constexpr Real kx   {  1. };
+  static constexpr Real kx_0 { 10. };
+  static constexpr Real kx_1 { 10. };
+  static constexpr Real ky   {  1. };
+  static constexpr Real ky_0 { 10. };
+  static constexpr Real ky_1 { 10. };
+
+  static Real force_x(Real t, Real x, Real y) { return 0.; }
+  static Real force_y(Real t, Real x, Real y) { return 0.; }
+//  static Real force_y(Real t, Real x, Real y) { return t > 1. ? -.1 : 0.; }
 };
 
 int main(int argc, char *argv[]) {
   System<problem_0> system;
 
-  system.vx[2] = .5;
+  system.vx[0] = 1.;
 
   Real dt = .01;
   Real stop = 100.;
