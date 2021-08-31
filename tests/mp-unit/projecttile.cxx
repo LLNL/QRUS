@@ -31,7 +31,7 @@ int main()
   auto unitspeed = 1.0 * (m / s);
   auto a = (30.000 * 2 * std::numbers::pi / 360.0) * (rad); 
   auto mpsx = 0.000 * (m / s); 
-  auto mpsy = 9.807 * (m / s); 
+  auto mpsy = -9.807 * (m / s); 
   //auto a = 30.000 * deg ;
   auto mkg = 80.000 * kg; 
   auto unitsec = 1.0 * s;
@@ -45,8 +45,8 @@ int main()
   auto v_x = ss * 0.86;
   auto v_y = ss * 0.5;
 
-  auto k1 = 1 / unitsec;
-  auto k2 = 1 / unitdist;
+  auto k1 = 0 / unitsec;
+  auto k2 = 0 / unitdist;
 
 #if OUTPUT_INFO
   std::cout << "initialize:" << std::endl;
@@ -72,8 +72,8 @@ int main()
     std::cout << "  v_x[" << t << "] = " << v_x << std::endl;
     std::cout << "  v_y[" << t << "] = " << v_y << std::endl;
 #endif
-    auto a_x = g_x - (k1 * v_x) + k2 * (v_x > zerospeed ? -1 : 1) * v_x * v_x;
-    auto a_y = g_y - (k1 * v_y) + k2 * (v_y > zerospeed ? -1 : 1) * v_y * v_y;
+    auto a_x = g_x - k1 * v_x + k2 * (v_x > zerospeed ? -1. : 1.) * v_x * v_x;
+    auto a_y = g_y - k1 * v_y + k2 * (v_y > zerospeed ? -1. : 1.) * v_y * v_y;
 #if OUTPUT_INFO
     std::cout << "  a_x[" << t << "] = " << a_x << std::endl;
     std::cout << "  a_y[" << t << "] = " << a_y << std::endl;
