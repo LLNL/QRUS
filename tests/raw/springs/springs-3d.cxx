@@ -2,12 +2,36 @@
 #ifndef USE_IOSTREAM
 #  define USE_IOSTREAM 1
 #endif
+#ifndef USE_CMATH
+#  define USE_CMATH 1
+#endif
+#ifndef USE_ASM
+#  define USE_ASM_ALTERNATIVES 0
+#endif
 
 #if USE_IOSTREAM
 #  include <iostream>
 #endif
 
+#if USE_CMATH
 #include <cmath>
+#elif USE_ASM_ALTERNATIVES
+double inline __declspec (naked) __fastcall sqrt(double n) {
+	_asm fld qword ptr [esp+4]
+	_asm fsqrt
+	_asm ret 8
+}
+#else
+double sqrt(const double fg) {
+ double n = fg / 2.0;
+ double lstX = 0.0; 
+ while (n != lstX) { 
+    lstX = n;
+    n = (n + fg/n) / 2.0; 
+  }
+  return n;
+}
+#endif
 
 typedef double   Real;
 typedef unsigned Index;
