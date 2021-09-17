@@ -1,12 +1,28 @@
 
 // Test 2: Projectile trajectory
 
-#if !defined(OUTPUT_DATA)
-#  define OUTPUT_DATA 1
+#if !defined(USE_IOSTREAM)
+#  define USE_IOSTREAM 1
 #endif
 
-#if OUTPUT_DATA
+#if USE_IOSTREAM
 #  include <iostream>
+#endif
+
+#if !defined(USE_CMATH)
+#  define USE_CMATH 1
+#endif
+
+#if USE_CMATH
+#  include <cmath>
+#endif
+
+#if !USE_IOSTREAM || !defined(OUTPUT_INFO)
+#  define OUTPUT_INFO USE_IOSTREAM
+#endif
+
+#if !USE_IOSTREAM || !defined(OUTPUT_DATA)
+#  define OUTPUT_DATA USE_IOSTREAM
 #endif
 
 #if !defined(K1)
@@ -21,40 +37,26 @@
 #  define N 10000
 #endif
 
-#if !defined(USE_MATH_FUNCTIONS)
-#  define USE_MATH_FUNCTIONS 1
-#endif
-
-#if USE_MATH_FUNCTIONS
-#  include <cmath>
-#endif
-
-#if !defined(OUTPUT_INFO)
-#  define OUTPUT_INFO 1
-#endif
-
-#if OUTPUT_INFO
-#  include <iostream>
-#endif
-
 using real_t = double;
 
 int main() {
 
   real_t   s = 10.000;
+#if USE_CMATH
   real_t   a = 3.1415926535897932384626433832795 * 30.00 / 180.0; // 30deg in rad
-  real_t   m = 80000;
+#endif
+  real_t   m = 80000; // {"M":1}
   real_t g_x =  0.;
   real_t g_y = -9.807;
-  real_t  dt = 10.e-6;
-  real_t   x = 0.0;
-  real_t   y = 0.0;
-#if USE_MATH_FUNCTIONS
+  real_t  dt = 10.e-6; // {"T":1}
+  real_t   x = 0.0; // {"L":1}
+  real_t   y = 0.0; // {"L":1}
+#if USE_CMATH
   real_t v_x = s * std::cos(a);
   real_t v_y = s * std::sin(a);
 #else
-  real_t v_x = s * .86;
-  real_t v_y = s * .50;
+  real_t v_x = s * .86; // {}
+  real_t v_y = s * .50; // {}
 #endif
 
   real_t k_1 = K1;
@@ -78,12 +80,12 @@ int main() {
 
   for ( int t = 0; t < N; ++t ) {
 
-#if USE_MATH_FUNCTIONS
+#if USE_CMATH
     real_t a_x = g_x - k_1 * v_x + k_2 * (v_x > 0. ? -1. : 1.) * std::pow(v_x,2);
     real_t a_y = g_y - k_1 * v_y + k_2 * (v_y > 0. ? -1. : 1.) * std::pow(v_y,2);
 #else
     real_t a_x = g_x - k_1 * v_x + k_2 * (v_x > 0. ? -1. : 1.) * v_x * v_x;
-    real_t a_y = g_y - k_1 * v_y + k_2 * (v_y > 0. ? -1. : 1.) * v_y * v_y;
+    real_t a_y = g_y - k_1 * v_y + k_2 * (v_y > 0. ? -1. /* {} */ : 1. /* {} */) * v_y * v_y;
 #endif
 
     v_x = v_x + a_x * dt;

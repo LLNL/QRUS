@@ -33,6 +33,10 @@ double sqrt(const double fg) {
 }
 #endif
 
+double sqrt_m2(const double fg) {
+  return sqrt(fg);
+}
+
 typedef double   Real;
 typedef unsigned Index;
 
@@ -111,12 +115,11 @@ struct System {
       Real const dvy = vy[n0] - vy[n1];
       Real const dvz = vz[n0] - vz[n1];
 
-      Real const norm = sqrt(dpx*dpx+dpy*dpy+dpz*dpz);
+      Real const norm = sqrt_m2(dpx*dpx+dpy*dpy+dpz*dpz);
       Real const dp_coef = tension[i]  * ( 1. - length[i] / norm );
 
       Real const dpdv_prod = dpx*dvx + dpy*dvy + dpz*dvz;
-      Real const dpdv_prod_sqrt = dpdv_prod > 0 ? sqrt(dpdv_prod) : sqrt(-dpdv_prod);
-      Real const dv_coef = friction[i] * dpdv_prod_sqrt / norm;
+      Real const dv_coef = friction[i] * dpdv_prod / (norm*norm);
 
       fx[n0] -= (dp_coef + dv_coef) * dpx; fx[n1] += (dp_coef + dv_coef) * dpx;
       fy[n0] -= (dp_coef + dv_coef) * dpy; fy[n1] += (dp_coef + dv_coef) * dpy;
@@ -143,8 +146,8 @@ struct System {
     return time;
   }
 
-  void State2CSV() {
 #if USE_IOSTREAM
+  void State2CSV() {
     std::cout << time << ",";
     for (Index i = 0; i < ProblemT::counts::mobiles + ProblemT::counts::anchors; ++i) {
       std::cout << px[i] << "," << py[i] << "," << pz[i] << ",";
@@ -152,8 +155,8 @@ struct System {
       std::cout << fx[i] << "," << fy[i] << "," << fz[i] << ",";
     }
     std::cout << std::endl;
-#endif
   }
+#endif
 };
 
 struct problem_0 {
@@ -224,11 +227,15 @@ int main(int argc, char *argv[]) {
   Real dt = .001;
   Real stop = 100.;
 
+#if USE_IOSTREAM
   system.State2CSV();
+#endif
   int cnt = 0;
   while (system.step(dt) < stop) {
+#if USE_IOSTREAM
     if (++cnt % 100 == 0)
       system.State2CSV();
+#endif
   }
 
   return 0;
